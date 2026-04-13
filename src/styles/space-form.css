@@ -1,0 +1,206 @@
+/* ── Space form ── */
+.space-form {
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.space-form h1 {
+  margin-bottom: var(--space-2);
+}
+
+/* ── Cover photo ── */
+.space-form-cover {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.space-form-cover-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  aspect-ratio: 16 / 9;
+  background: var(--color-bg-tertiary);
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-tertiary);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.space-form-cover-upload:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.space-form-cover-preview {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: var(--color-bg-tertiary);
+}
+
+.space-form-cover-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.space-form-cover-remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  border-radius: var(--radius-full);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.space-form-cover-remove:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+/* ── Fields ── */
+.space-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.space-form-label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-text-secondary);
+}
+
+.space-form-required {
+  color: var(--color-error);
+}
+
+.space-form-input {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-size: var(--text-base);
+  transition: border-color var(--transition-fast);
+}
+
+.space-form-input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.space-form-input::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.space-form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23707090' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px;
+  text-transform: capitalize;
+}
+
+.space-form-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* ── Tags ── */
+.space-form-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* ── Budget ── */
+.space-form-budget-wrap {
+  position: relative;
+}
+
+.space-form-budget-symbol {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-tertiary);
+  font-size: var(--text-base);
+  pointer-events: none;
+}
+
+.space-form-budget {
+  padding-left: 30px;
+}
+
+/* hide number spinners */
+.space-form-budget::-webkit-inner-spin-button,
+.space-form-budget::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.space-form-budget {
+  -moz-appearance: textfield;
+}
+
+/* ── Error ── */
+.space-form-error {
+  color: var(--color-error);
+  font-size: var(--text-sm);
+}
+
+/* ── Actions ── */
+.space-form-actions {
+  display: flex;
+  gap: 12px;
+  padding-top: var(--space-2);
+}
+
+.space-form-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
+  transition: background-color var(--transition-fast);
+}
+
+.space-form-btn--cancel {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+}
+
+.space-form-btn--cancel:hover {
+  background: var(--color-bg-hover);
+  color: var(--color-text-primary);
+}
+
+.space-form-btn--save {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.space-form-btn--save:hover {
+  background: var(--color-accent-hover);
+}
+
+.space-form-btn--save:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

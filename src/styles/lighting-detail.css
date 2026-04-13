@@ -1,0 +1,10 @@
+/* Lighting detail reuses item-detail.css classes for photo strip,
+   header, sections, and definition list. Only unique styles here. */
+
+.lighting-detail-nav {
+  padding-top: var(--space-4);
+}
+
+.lighting-detail-back {
+  font-size: var(--text-sm);
+}

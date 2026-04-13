@@ -1,0 +1,227 @@
+/* ── Studio page ── */
+.studio h1 {
+  margin-bottom: var(--space-5);
+}
+
+/* ── Composer ── */
+.studio-composer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+.studio-textarea {
+  width: 100%;
+  min-height: 140px;
+  padding: 14px 16px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-primary);
+  font-family: inherit;
+  font-size: var(--text-base);
+  line-height: 1.6;
+  resize: vertical;
+  transition: border-color var(--transition-fast);
+}
+
+.studio-textarea:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.studio-textarea::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+/* ── Attachment chips ── */
+.studio-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.studio-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  color: var(--color-text-primary);
+}
+
+.studio-chip-icon {
+  font-size: 10px;
+  color: var(--color-accent);
+}
+
+.studio-chip-name {
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.studio-chip-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  background: none;
+  border: none;
+  color: var(--color-text-tertiary);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: var(--radius-full);
+  transition: color var(--transition-fast);
+}
+
+.studio-chip-remove:hover {
+  color: var(--color-error);
+}
+
+/* ── Action buttons ── */
+.studio-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.studio-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.studio-action-btn:hover {
+  background: var(--color-bg-hover);
+}
+
+/* ── Submit row ── */
+.studio-submit-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.studio-clear-btn {
+  padding: 8px 16px;
+  background: none;
+  border: none;
+  color: var(--color-text-tertiary);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.studio-clear-btn:hover {
+  color: var(--color-text-primary);
+}
+
+.studio-generate-btn {
+  padding: 12px 32px;
+  background: var(--color-accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.studio-generate-btn:hover {
+  background: var(--color-accent-hover);
+}
+
+.studio-generate-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Error ── */
+.studio-error {
+  padding: var(--space-3) var(--space-4);
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.2);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-5);
+}
+
+.studio-error p {
+  color: var(--color-error);
+  font-size: var(--text-sm);
+}
+
+/* ── Result ── */
+.studio-result {
+  margin-bottom: var(--space-5);
+}
+
+.studio-result-img {
+  width: 100%;
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-4);
+}
+
+.studio-result-actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* ── Loading overlay ── */
+.studio-loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 15, 26, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-5);
+  z-index: 300;
+}
+
+.studio-loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-accent);
+  border-radius: var(--radius-full);
+  animation: studio-spin 0.8s linear infinite;
+}
+
+@keyframes studio-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.studio-loading-text {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+
+/* ── Save modal ── */
+.studio-save-modal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}

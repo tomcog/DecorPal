@@ -1,0 +1,152 @@
+/* ── Swatches section ── */
+.palette-form-swatches-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.palette-form-swatches {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ── Individual swatch row ── */
+.palette-form-swatch {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: grab;
+}
+
+.palette-form-swatch:active {
+  cursor: grabbing;
+}
+
+.palette-form-swatch-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-border);
+  padding: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color var(--transition-fast);
+}
+
+.palette-form-swatch-circle:hover {
+  border-color: var(--color-border-light);
+}
+
+.palette-form-swatch-hex {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  font-family: monospace;
+  min-width: 70px;
+}
+
+.palette-form-swatch-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.palette-form-swatch-move {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-tertiary);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.palette-form-swatch-move:hover:not(:disabled) {
+  background: var(--color-bg-hover);
+  color: var(--color-text-primary);
+}
+
+.palette-form-swatch-move:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.palette-form-swatch-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-error);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.palette-form-swatch-remove:hover {
+  background: rgba(248, 113, 113, 0.1);
+}
+
+/* ── Add button ── */
+.palette-form-add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: none;
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-tertiary);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), color var(--transition-fast);
+  align-self: flex-start;
+}
+
+.palette-form-add-btn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* ── Hidden color input ── */
+.palette-form-color-input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── Delete button ── */
+.palette-form-delete-btn {
+  align-self: center;
+  padding: 8px 16px;
+  background: none;
+  border: none;
+  color: var(--color-error);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+}
+
+.palette-form-delete-btn:hover {
+  opacity: 0.8;
+}
