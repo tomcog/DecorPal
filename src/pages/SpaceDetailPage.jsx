@@ -3,16 +3,17 @@ import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useSpace, deleteSpace } from '../hooks/useSpaces'
 import ItemsList from '../components/ItemsList'
 import PaletteTab from '../components/PaletteTab'
+import LightingTab from '../components/LightingTab'
 import RendersTab from '../components/RendersTab'
 import '../styles/space-detail.css'
 
-const TABS = ['Overview', 'Items', 'Palette', 'Renders']
+const TABS = ['Images', 'Items', 'Palette', 'Lighting']
 
 export default function SpaceDetailPage() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { space, loading } = useSpace(id)
-  const [activeTab, setActiveTab] = useState('Overview')
+  const [activeTab, setActiveTab] = useState('Images')
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -140,12 +141,9 @@ export default function SpaceDetailPage() {
       <div className="space-detail-tab-content">
         {activeTab === 'Items' && <ItemsList spaceId={id} />}
         {activeTab === 'Palette' && <PaletteTab spaceId={id} />}
-        {activeTab === 'Renders' && <RendersTab spaceId={id} />}
-        {activeTab === 'Overview' && (
-          <p className="page-placeholder">
-            Overview content coming soon.
-          </p>
-        )}
+        {activeTab === 'Lighting' && <LightingTab spaceId={id} />}
+        {activeTab === 'Images' && <RendersTab spaceId={id} />}
+
       </div>
 
       {showDeleteConfirm && (
@@ -154,7 +152,7 @@ export default function SpaceDetailPage() {
             <h3 className="space-detail-confirm-title">Delete space?</h3>
             <p className="space-detail-confirm-text">
               This will permanently delete <strong>{space.name}</strong> and all
-              its items, palettes, and renders. This cannot be undone.
+              its items, palettes, and images. This cannot be undone.
             </p>
             <div className="space-detail-confirm-actions">
               <button

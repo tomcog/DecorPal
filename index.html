@@ -10,6 +10,7 @@
     <title>DecorPal</title>
   </head>
   <body>
+    <script>document.documentElement.setAttribute('data-theme',localStorage.getItem('decorpal-theme')||'dark')</script>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

@@ -113,6 +113,117 @@
   transform: translateX(20px);
 }
 
+/* ── Lighting products ── */
+.lighting-products-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lighting-product-card {
+  display: flex;
+  gap: 10px;
+  align-items: start;
+  padding: 10px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.lighting-product-card--drag {
+  outline: 2px dashed var(--color-accent);
+  outline-offset: -2px;
+  background: var(--color-accent-light);
+}
+
+.lighting-product-photo-col {
+  flex-shrink: 0;
+}
+
+.lighting-product-photo {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-bg-tertiary);
+}
+
+.lighting-product-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.lighting-product-photo-add {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-tertiary);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.lighting-product-photo-add:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.lighting-product-fields {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.lighting-product-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  padding: 0;
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-error);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.lighting-product-remove:hover {
+  background: rgba(248, 113, 113, 0.1);
+}
+
+.lighting-product-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: none;
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-tertiary);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  cursor: pointer;
+  align-self: flex-start;
+  transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.lighting-product-add:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
 /* ── Acquired fields ── */
 .item-form-acquired-fields {
   display: flex;

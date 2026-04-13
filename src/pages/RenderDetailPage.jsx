@@ -26,7 +26,7 @@ export default function RenderDetailPage() {
   if (!render) {
     return (
       <div className="page">
-        <p className="page-placeholder">Render not found.</p>
+        <p className="page-placeholder">Image not found.</p>
         <Link to={`/spaces/${spaceId}`} className="render-detail-back">
           Back to space
         </Link>
@@ -169,7 +169,7 @@ export default function RenderDetailPage() {
                     setShowDeleteConfirm(true)
                   }}
                 >
-                  Delete render
+                  Delete image
                 </button>
               </div>
             )}
@@ -217,10 +217,10 @@ export default function RenderDetailPage() {
       {showDeleteConfirm && (
         <div className="space-detail-overlay" onClick={() => setShowDeleteConfirm(false)}>
           <div className="space-detail-confirm" onClick={(e) => e.stopPropagation()}>
-            <h3 className="space-detail-confirm-title">Delete render?</h3>
+            <h3 className="space-detail-confirm-title">Delete image?</h3>
             <p className="space-detail-confirm-text">
-              This will permanently delete <strong>{render.name || 'this render'}</strong> and
-              its image. This cannot be undone.
+              This will permanently delete <strong>{render.name || 'this image'}</strong>.
+              This cannot be undone.
             </p>
             <div className="space-detail-confirm-actions">
               <button

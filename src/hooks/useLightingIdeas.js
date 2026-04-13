@@ -44,7 +44,7 @@ export function useLightingIdea(id) {
       })
   }, [id])
 
-  return { idea, loading }
+  return { idea, loading, setIdea }
 }
 
 export async function createLightingIdea(fields) {

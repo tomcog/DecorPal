@@ -101,6 +101,30 @@
   white-space: nowrap;
 }
 
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.theme-toggle:hover {
+  background: var(--color-bg-hover);
+  color: var(--color-text-primary);
+}
+
+.tab-bar-theme {
+  background: none;
+  border: none;
+  color: var(--color-text-tertiary);
+}
+
 .sidebar-signout {
   background: transparent;
   border: 1px solid var(--color-border);

@@ -221,8 +221,8 @@ export default function AssetPicker({ onConfirm, onClose, existingIds }) {
                         const asset = buildAssetEntry(
                           'render',
                           r.id,
-                          r.name || 'Untitled render',
-                          r.prompt_text ? r.prompt_text.slice(0, 80) : 'Saved render'
+                          r.name || 'Untitled image',
+                          r.prompt_text ? r.prompt_text.slice(0, 80) : 'Saved image'
                         )
                         const disabled = isAlreadyAttached(r.id)
                         return (
@@ -251,9 +251,9 @@ export default function AssetPicker({ onConfirm, onClose, existingIds }) {
                             </div>
                             <div className="asset-picker-item-info">
                               <span className="asset-picker-item-name">
-                                {r.name || 'Untitled render'}
+                                {r.name || 'Untitled image'}
                               </span>
-                              <span className="asset-picker-item-type">Render</span>
+                              <span className="asset-picker-item-type">Image</span>
                             </div>
                             {(isSelected(r.id) || disabled) && (
                               <span className="asset-picker-item-check">&#10003;</span>

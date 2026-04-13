@@ -8,8 +8,8 @@ export default function RendersPage() {
   if (loading) {
     return (
       <div className="page">
-        <h1>Renders</h1>
-        <p className="page-placeholder">Loading renders...</p>
+        <h1>Images</h1>
+        <p className="page-placeholder">Loading images...</p>
       </div>
     )
   }
@@ -17,7 +17,7 @@ export default function RendersPage() {
   if (renders.length === 0) {
     return (
       <div className="page">
-        <h1>Renders</h1>
+        <h1>Images</h1>
         <div className="renders-empty">
           <div className="renders-empty-icon">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -26,9 +26,9 @@ export default function RendersPage() {
               <polyline points="21 15 16 10 5 21" />
             </svg>
           </div>
-          <h2 className="renders-empty-title">No renders yet</h2>
+          <h2 className="renders-empty-title">No images yet</h2>
           <p className="renders-empty-text">
-            Generate your first visualization in the AI Studio.
+            Upload images to a space or generate one in the AI Studio.
           </p>
           <Link to="/ai-studio" className="renders-empty-btn">
             Open AI Studio
@@ -50,7 +50,7 @@ export default function RendersPage() {
 
   return (
     <div className="page">
-      <h1>Renders</h1>
+      <h1>Images</h1>
 
       {grouped.map((group) => (
         <div key={group.id} className="renders-group">

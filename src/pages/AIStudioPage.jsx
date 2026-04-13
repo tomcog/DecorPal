@@ -38,7 +38,7 @@ export default function AIStudioPage() {
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState(null)
 
-  const hasUnsavedRender = generatedImage && !saving
+  const hasUnsavedImage = generatedImage && !saving
 
   // Photo previews
   useEffect(() => {
@@ -49,27 +49,27 @@ export default function AIStudioPage() {
 
   // Leave confirmation
   useEffect(() => {
-    if (!hasUnsavedRender) return
+    if (!hasUnsavedImage) return
     function handleBeforeUnload(e) {
       e.preventDefault()
     }
     window.addEventListener('beforeunload', handleBeforeUnload)
     return () => window.removeEventListener('beforeunload', handleBeforeUnload)
-  }, [hasUnsavedRender])
+  }, [hasUnsavedImage])
 
   // Block navigation with React Router
   const blockRef = useRef(null)
   useEffect(() => {
-    if (!hasUnsavedRender) return
+    if (!hasUnsavedImage) return
     const handler = (e) => {
-      if (!hasUnsavedRender) return
-      if (!window.confirm('Leave without saving this render?')) {
+      if (!hasUnsavedImage) return
+      if (!window.confirm('Leave without saving this image?')) {
         e.preventDefault()
       }
     }
     window.addEventListener('popstate', handler)
     return () => window.removeEventListener('popstate', handler)
-  }, [hasUnsavedRender])
+  }, [hasUnsavedImage])
 
   const hasContent = promptText.trim() || attachments.length > 0 || photoFiles.length > 0
 
@@ -134,7 +134,7 @@ export default function AIStudioPage() {
       day: 'numeric',
       year: 'numeric',
     })
-    setSaveName(`Render · ${today}`)
+    setSaveName(`AI Image · ${today}`)
     setSaveSpaceId(spaces.length > 0 ? spaces[0].id : '')
     setSaveError(null)
     setShowSaveModal(true)
@@ -333,7 +333,7 @@ export default function AIStudioPage() {
       {showSaveModal && (
         <div className="space-detail-overlay" onClick={() => setShowSaveModal(false)}>
           <div className="space-detail-confirm studio-save-modal" onClick={(e) => e.stopPropagation()}>
-            <h3 className="space-detail-confirm-title">Save render</h3>
+            <h3 className="space-detail-confirm-title">Save image</h3>
 
             <div className="space-form-field">
               <label className="space-form-label" htmlFor="save-space">
