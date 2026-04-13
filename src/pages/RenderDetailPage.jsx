@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useRender, updateRender, deleteRender } from '../hooks/useRenders'
+import { updateSpace } from '../hooks/useSpaces'
 import '../styles/render-detail.css'
 
 export default function RenderDetailPage() {
@@ -12,6 +13,7 @@ export default function RenderDetailPage() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [coverSet, setCoverSet] = useState(false)
 
   if (loading) {
     return (
@@ -140,6 +142,19 @@ export default function RenderDetailPage() {
               <div className="space-detail-menu">
                 <button
                   className="space-detail-menu-item"
+                  onClick={async () => {
+                    setMenuOpen(false)
+                    if (render.image_url) {
+                      await updateSpace(spaceId, { cover_photo_url: render.image_url })
+                      setCoverSet(true)
+                      setTimeout(() => setCoverSet(false), 2500)
+                    }
+                  }}
+                >
+                  Set as space cover
+                </button>
+                <button
+                  className="space-detail-menu-item"
                   onClick={() => {
                     setMenuOpen(false)
                     handleStartEdit()
@@ -187,6 +202,10 @@ export default function RenderDetailPage() {
             )}
           </div>
         </div>
+      )}
+
+      {coverSet && (
+        <p className="render-detail-cover-toast">Cover photo updated.</p>
       )}
 
       <div className="render-detail-nav">

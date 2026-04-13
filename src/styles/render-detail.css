@@ -92,6 +92,18 @@
   text-transform: capitalize;
 }
 
+/* ── Cover toast ── */
+.render-detail-cover-toast {
+  padding: 10px 16px;
+  background: rgba(74, 222, 128, 0.15);
+  border: 1px solid rgba(74, 222, 128, 0.25);
+  border-radius: var(--radius-md);
+  color: var(--color-success);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  margin-bottom: var(--space-4);
+}
+
 /* ── Nav ── */
 .render-detail-nav {
   padding-top: var(--space-4);
