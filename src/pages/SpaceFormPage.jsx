@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import {
   useSpace,
@@ -38,6 +38,30 @@ export default function SpaceFormPage() {
   const [budget, setBudget] = useState('')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
+  const [dragOver, setDragOver] = useState(false)
+  const dragCounter = useRef(0)
+
+  function handleDragEnter(e) {
+    e.preventDefault()
+    dragCounter.current++
+    if (e.dataTransfer.types.includes('Files')) setDragOver(true)
+  }
+  function handleDragOver(e) {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'copy'
+  }
+  function handleDragLeave(e) {
+    e.preventDefault()
+    dragCounter.current--
+    if (dragCounter.current === 0) setDragOver(false)
+  }
+  function handleDrop(e) {
+    e.preventDefault()
+    dragCounter.current = 0
+    setDragOver(false)
+    const file = e.dataTransfer.files?.[0]
+    if (file && file.type.startsWith('image/')) setCoverFile(file)
+  }
 
   useEffect(() => {
     if (isEdit && space) {
@@ -156,7 +180,16 @@ export default function SpaceFormPage() {
       <form className="space-form" onSubmit={handleSubmit}>
         <h1>{isEdit ? 'Edit Space' : 'New Space'}</h1>
 
-        <div className="space-form-cover">
+        <div
+          className={`space-form-cover${dragOver ? ' space-form-cover--drag' : ''}`}
+          onDragEnter={handleDragEnter}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+        >
+          {dragOver && (
+            <div className="space-form-cover-drag-overlay">Drop image here</div>
+          )}
           {previewSrc ? (
             <div className="space-form-cover-preview">
               <img src={previewSrc} alt="Cover preview" />
@@ -179,7 +212,7 @@ export default function SpaceFormPage() {
                 <circle cx="8.5" cy="8.5" r="1.5" />
                 <polyline points="21 15 16 10 5 21" />
               </svg>
-              <span>Add cover photo</span>
+              <span>Add or drop cover photo</span>
               <input
                 type="file"
                 accept="image/*"

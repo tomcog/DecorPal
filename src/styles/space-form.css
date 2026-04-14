@@ -14,6 +14,27 @@
 .space-form-cover {
   border-radius: var(--radius-lg);
   overflow: hidden;
+  position: relative;
+}
+
+.space-form-cover--drag {
+  outline: 2px dashed var(--color-accent);
+  outline-offset: -2px;
+}
+
+.space-form-cover-drag-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(124, 111, 247, 0.12);
+  border-radius: var(--radius-lg);
+  color: var(--color-accent);
+  font-weight: var(--font-semibold);
+  font-size: var(--text-sm);
+  z-index: 2;
+  pointer-events: none;
 }
 
 .space-form-cover-upload {

@@ -71,6 +71,31 @@ export default function AIStudioPage() {
     return () => window.removeEventListener('popstate', handler)
   }, [hasUnsavedImage])
 
+  const [dragOver, setDragOver] = useState(false)
+  const dragCounter = useRef(0)
+
+  function handleDragEnter(e) {
+    e.preventDefault()
+    dragCounter.current++
+    if (e.dataTransfer.types.includes('Files')) setDragOver(true)
+  }
+  function handleDragOver(e) {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'copy'
+  }
+  function handleDragLeave(e) {
+    e.preventDefault()
+    dragCounter.current--
+    if (dragCounter.current === 0) setDragOver(false)
+  }
+  function handleDrop(e) {
+    e.preventDefault()
+    dragCounter.current = 0
+    setDragOver(false)
+    const files = Array.from(e.dataTransfer.files || []).filter(f => f.type.startsWith('image/'))
+    if (files.length > 0) setPhotoFiles(prev => [...prev, ...files])
+  }
+
   const hasContent = promptText.trim() || attachments.length > 0 || photoFiles.length > 0
 
   function handleAddPhotos(e) {
@@ -183,7 +208,16 @@ export default function AIStudioPage() {
       <h1>AI Studio</h1>
 
       {/* Prompt composer */}
-      <div className="studio-composer">
+      <div
+        className={`studio-composer${dragOver ? ' studio-composer--drag' : ''}`}
+        onDragEnter={handleDragEnter}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+      >
+        {dragOver && (
+          <div className="studio-drag-overlay">Drop images here</div>
+        )}
         <textarea
           className="studio-textarea"
           placeholder="Describe what you're going for..."
@@ -249,7 +283,7 @@ export default function AIStudioPage() {
               <circle cx="8.5" cy="8.5" r="1.5" />
               <polyline points="21 15 16 10 5 21" />
             </svg>
-            Upload photo
+            Upload or drop photos
           </button>
           <input
             ref={fileInputRef}

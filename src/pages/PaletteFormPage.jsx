@@ -41,6 +41,8 @@ export default function PaletteFormPage() {
   const [colorCount, setColorCount] = useState(6)
   const [hoverColor, setHoverColor] = useState(null)
   const [pasteValue, setPasteValue] = useState('')
+  const [imageDragOver, setImageDragOver] = useState(false)
+  const imageDragCounter = useRef(0)
 
   useEffect(() => {
     if (isEdit && palette) {
@@ -261,6 +263,37 @@ export default function PaletteFormPage() {
     }
   }
 
+  function handleImageDragEnter(e) {
+    e.preventDefault()
+    imageDragCounter.current++
+    if (e.dataTransfer.types.includes('Files')) setImageDragOver(true)
+  }
+
+  function handleImageDragOver(e) {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'copy'
+  }
+
+  function handleImageDragLeave(e) {
+    e.preventDefault()
+    imageDragCounter.current--
+    if (imageDragCounter.current === 0) setImageDragOver(false)
+  }
+
+  async function handleImageDrop(e) {
+    e.preventDefault()
+    imageDragCounter.current = 0
+    setImageDragOver(false)
+    const file = e.dataTransfer.files?.[0]
+    if (!file || !file.type.startsWith('image/')) return
+    try {
+      const dataUrl = await fileToDataUrl(file)
+      await handleLoadImage(dataUrl)
+    } catch {
+      setError('Could not load that image. Try another.')
+    }
+  }
+
   async function handleSubmit(e) {
     e.preventDefault()
     setError(null)
@@ -386,7 +419,16 @@ export default function PaletteFormPage() {
               </div>
             </div>
           ) : (
-            <div className="palette-extract-actions">
+            <div
+              className={`palette-extract-actions${imageDragOver ? ' palette-extract-actions--drag' : ''}`}
+              onDragEnter={handleImageDragEnter}
+              onDragOver={handleImageDragOver}
+              onDragLeave={handleImageDragLeave}
+              onDrop={handleImageDrop}
+            >
+              {imageDragOver && (
+                <div className="palette-extract-drag-overlay">Drop image here</div>
+              )}
               <button
                 type="button"
                 className="palette-extract-btn"
@@ -398,7 +440,7 @@ export default function PaletteFormPage() {
                   <polyline points="17 8 12 3 7 8" />
                   <line x1="12" y1="3" x2="12" y2="15" />
                 </svg>
-                Upload a photo
+                Upload or drop a photo
               </button>
               {spaceImages.length > 0 && (
                 <button

@@ -67,6 +67,30 @@
   color: var(--color-accent);
 }
 
+.item-form-photos--drag {
+  outline: 2px dashed var(--color-accent);
+  outline-offset: -2px;
+  background: var(--color-accent-light);
+  border-radius: var(--radius-md);
+  padding: 8px;
+  position: relative;
+}
+
+.item-form-drag-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(124, 111, 247, 0.12);
+  border-radius: var(--radius-md);
+  color: var(--color-accent);
+  font-weight: var(--font-semibold);
+  font-size: var(--text-sm);
+  z-index: 2;
+  pointer-events: none;
+}
+
 /* ── Toggle ── */
 .item-form-toggle-row {
   display: flex;

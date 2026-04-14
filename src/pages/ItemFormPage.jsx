@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import {
   useItem,
@@ -45,6 +45,30 @@ export default function ItemFormPage() {
   const [finalPurchaseNotes, setFinalPurchaseNotes] = useState('')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
+  const [dragOver, setDragOver] = useState(false)
+  const dragCounter = useRef(0)
+
+  function handleDragEnter(e) {
+    e.preventDefault()
+    dragCounter.current++
+    if (e.dataTransfer.types.includes('Files')) setDragOver(true)
+  }
+  function handleDragOver(e) {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'copy'
+  }
+  function handleDragLeave(e) {
+    e.preventDefault()
+    dragCounter.current--
+    if (dragCounter.current === 0) setDragOver(false)
+  }
+  function handleDrop(e) {
+    e.preventDefault()
+    dragCounter.current = 0
+    setDragOver(false)
+    const files = Array.from(e.dataTransfer.files || []).filter(f => f.type.startsWith('image/'))
+    if (files.length > 0) setNewFiles(prev => [...prev, ...files])
+  }
 
   useEffect(() => {
     if (isEdit && item) {
@@ -175,8 +199,17 @@ export default function ItemFormPage() {
       <form className="space-form" onSubmit={handleSubmit}>
         <h1>{isEdit ? 'Edit Item' : 'New Item'}</h1>
 
-        <div className="item-form-photos">
-          <span className="space-form-label">Photos</span>
+        <div
+          className={`item-form-photos${dragOver ? ' item-form-photos--drag' : ''}`}
+          onDragEnter={handleDragEnter}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+        >
+          <span className="space-form-label">Photos — or drag & drop</span>
+          {dragOver && (
+            <div className="item-form-drag-overlay">Drop images here</div>
+          )}
           <div className="item-form-thumbs">
             {existingPhotos.map((url) => (
               <div key={url} className="item-form-thumb">

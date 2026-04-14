@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { createItem, uploadItemPhotos } from '../hooks/useItems'
 import '../styles/item-form.css'
@@ -26,6 +26,30 @@ export default function QuickAddItemPage() {
   const [finalPurchaseNotes, setFinalPurchaseNotes] = useState('')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
+  const [dragOver, setDragOver] = useState(false)
+  const dragCounter = useRef(0)
+
+  function handleDragEnter(e) {
+    e.preventDefault()
+    dragCounter.current++
+    if (e.dataTransfer.types.includes('Files')) setDragOver(true)
+  }
+  function handleDragOver(e) {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'copy'
+  }
+  function handleDragLeave(e) {
+    e.preventDefault()
+    dragCounter.current--
+    if (dragCounter.current === 0) setDragOver(false)
+  }
+  function handleDrop(e) {
+    e.preventDefault()
+    dragCounter.current = 0
+    setDragOver(false)
+    const file = e.dataTransfer.files?.[0]
+    if (file && file.type.startsWith('image/')) setPhotoFile(file)
+  }
 
   useEffect(() => {
     if (!photoFile) {
@@ -91,8 +115,17 @@ export default function QuickAddItemPage() {
       <form className="space-form" onSubmit={handleSubmit}>
         <h1>Log a Purchase</h1>
 
-        <div className="item-form-photos">
-          <span className="space-form-label">Photo (optional)</span>
+        <div
+          className={`item-form-photos${dragOver ? ' item-form-photos--drag' : ''}`}
+          onDragEnter={handleDragEnter}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+        >
+          <span className="space-form-label">Photo (optional) — or drag & drop</span>
+          {dragOver && (
+            <div className="item-form-drag-overlay">Drop image here</div>
+          )}
           <div className="item-form-thumbs">
             {photoPreview ? (
               <div className="item-form-thumb">
