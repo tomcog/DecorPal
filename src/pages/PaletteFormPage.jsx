@@ -35,6 +35,7 @@ export default function PaletteFormPage() {
   const [error, setError] = useState(null)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [duplicating, setDuplicating] = useState(false)
   const [extracting, setExtracting] = useState(false)
   const [showImagePicker, setShowImagePicker] = useState(false)
   const [sourceImage, setSourceImage] = useState(null)
@@ -323,6 +324,23 @@ export default function PaletteFormPage() {
     navigate(`/spaces/${spaceId}`)
   }
 
+  async function handleDuplicate() {
+    setDuplicating(true)
+    setError(null)
+    const fields = {
+      space_id: spaceId,
+      name: (name || 'Palette') + ' (copy)',
+      swatches,
+    }
+    const { data, error: dupError } = await createPalette(fields)
+    if (dupError) {
+      setError(dupError.message)
+      setDuplicating(false)
+      return
+    }
+    navigate(`/spaces/${spaceId}/palettes/${data.id}`, { replace: true })
+  }
+
   async function handleDelete() {
     setDeleting(true)
     const { error } = await deletePalette(paletteId)
@@ -594,13 +612,23 @@ export default function PaletteFormPage() {
         </div>
 
         {isEdit && (
-          <button
-            type="button"
-            className="palette-form-delete-btn"
-            onClick={() => setShowDeleteConfirm(true)}
-          >
-            Delete palette
-          </button>
+          <div className="palette-form-bottom-actions">
+            <button
+              type="button"
+              className="palette-form-duplicate-btn"
+              onClick={handleDuplicate}
+              disabled={duplicating}
+            >
+              {duplicating ? 'Duplicating...' : 'Duplicate palette'}
+            </button>
+            <button
+              type="button"
+              className="palette-form-delete-btn"
+              onClick={() => setShowDeleteConfirm(true)}
+            >
+              Delete palette
+            </button>
+          </div>
         )}
       </form>
 

@@ -73,6 +73,16 @@ export default function RenderDetailPage() {
     <div className="page render-detail">
       {render.image_url && (
         <div className="render-detail-image-wrap">
+          <button
+            className="render-detail-close"
+            onClick={() => navigate(-1)}
+            aria-label="Close"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
           <img
             src={render.image_url}
             alt={render.name}
@@ -207,12 +217,6 @@ export default function RenderDetailPage() {
       {coverSet && (
         <p className="render-detail-cover-toast">Cover photo updated.</p>
       )}
-
-      <div className="render-detail-nav">
-        <Link to={`/spaces/${spaceId}`} className="render-detail-back">
-          Back to space
-        </Link>
-      </div>
 
       {showDeleteConfirm && (
         <div className="space-detail-overlay" onClick={() => setShowDeleteConfirm(false)}>

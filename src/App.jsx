@@ -13,6 +13,7 @@ import QuickAddItemPage from './pages/QuickAddItemPage'
 import PaletteFormPage from './pages/PaletteFormPage'
 import LightingDetailPage from './pages/LightingDetailPage'
 import LightingFormPage from './pages/LightingFormPage'
+import PaintFormPage from './pages/PaintFormPage'
 import RenderDetailPage from './pages/RenderDetailPage'
 import AIStudioPage from './pages/AIStudioPage'
 import RendersPage from './pages/RendersPage'
@@ -41,6 +42,8 @@ export default function App() {
             <Route path="spaces/:id/items/:itemId/edit" element={<ItemFormPage />} />
             <Route path="spaces/:id/palettes/new" element={<PaletteFormPage />} />
             <Route path="spaces/:id/palettes/:paletteId" element={<PaletteFormPage />} />
+            <Route path="spaces/:id/paints/new" element={<PaintFormPage />} />
+            <Route path="spaces/:id/paints/:paintId" element={<PaintFormPage />} />
             <Route path="spaces/:id/lighting/new" element={<LightingFormPage />} />
             <Route path="spaces/:id/lighting/:lightingId" element={<LightingDetailPage />} />
             <Route path="spaces/:id/lighting/:lightingId/edit" element={<LightingFormPage />} />

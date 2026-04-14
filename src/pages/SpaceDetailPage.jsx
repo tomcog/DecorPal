@@ -1,22 +1,28 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useSpace, deleteSpace } from '../hooks/useSpaces'
 import ItemsList from '../components/ItemsList'
 import PaletteTab from '../components/PaletteTab'
 import LightingTab from '../components/LightingTab'
 import RendersTab from '../components/RendersTab'
+import FeedTab from '../components/FeedTab'
+import PaintTab from '../components/PaintTab'
 import '../styles/space-detail.css'
 
-const TABS = ['Images', 'Items', 'Palette', 'Lighting']
+const TABS = ['Feed', 'Images', 'Items', 'Palette', 'Paint', 'Lighting']
 
 export default function SpaceDetailPage() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { space, loading } = useSpace(id)
-  const [activeTab, setActiveTab] = useState('Images')
+  const [activeTab, setActiveTab] = useState(() => {
+    const saved = sessionStorage.getItem(`space-tab-${id}`)
+    return saved && TABS.includes(saved) ? saved : 'Feed'
+  })
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const tabsRef = useRef(null)
 
   if (loading) {
     return (
@@ -126,12 +132,18 @@ export default function SpaceDetailPage() {
         </p>
       )}
 
-      <div className="space-detail-tabs">
+      <div className="space-detail-tabs" ref={tabsRef}>
         {TABS.map((tab) => (
           <button
             key={tab}
             className={`space-detail-tab${activeTab === tab ? ' space-detail-tab--active' : ''}`}
-            onClick={() => setActiveTab(tab)}
+            onClick={() => {
+              setActiveTab(tab)
+              sessionStorage.setItem(`space-tab-${id}`, tab)
+              requestAnimationFrame(() => {
+                tabsRef.current?.scrollIntoView({ block: 'nearest' })
+              })
+            }}
           >
             {tab}
           </button>
@@ -139,11 +151,12 @@ export default function SpaceDetailPage() {
       </div>
 
       <div className="space-detail-tab-content">
+        {activeTab === 'Feed' && <FeedTab spaceId={id} />}
         {activeTab === 'Items' && <ItemsList spaceId={id} />}
         {activeTab === 'Palette' && <PaletteTab spaceId={id} />}
+        {activeTab === 'Paint' && <PaintTab spaceId={id} />}
         {activeTab === 'Lighting' && <LightingTab spaceId={id} />}
         {activeTab === 'Images' && <RendersTab spaceId={id} />}
-
       </div>
 
       {showDeleteConfirm && (

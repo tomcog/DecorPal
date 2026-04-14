@@ -1,0 +1,97 @@
+/* ── Feed empty state ── */
+.feed-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-8) var(--space-4);
+}
+
+.feed-empty-icon {
+  color: var(--color-text-tertiary);
+  margin-bottom: var(--space-4);
+}
+
+.feed-empty-title {
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-2);
+}
+
+.feed-empty-text {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  max-width: 280px;
+}
+
+/* ── Feed grid ── */
+.feed-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+/* ── Feed card (reuses render-card pattern) ── */
+.feed-card {
+  display: block;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.feed-card:hover {
+  border-color: var(--color-border-light);
+  box-shadow: var(--shadow-md);
+  text-decoration: none;
+}
+
+.feed-card-img-wrap {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--color-bg-tertiary);
+}
+
+.feed-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.feed-card-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  padding: 2px 6px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 10px;
+  font-weight: var(--font-bold);
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.05em;
+  line-height: 1.4;
+}
+
+.feed-card-body {
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.feed-card-name {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.feed-card-date {
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary);
+}
