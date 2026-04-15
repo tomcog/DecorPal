@@ -20,6 +20,182 @@
   font-family: monospace;
 }
 
+.paint-form-hint {
+  color: var(--color-text-tertiary);
+  font-weight: var(--font-regular);
+  font-size: var(--text-xs);
+}
+
+.paint-form-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.paint-form-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px 6px 6px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.paint-form-chip-swatch {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+}
+
+.paint-form-chip-hex {
+  font-family: monospace;
+  font-size: var(--text-xs);
+  color: var(--color-text-primary);
+}
+
+.paint-form-chip-remove {
+  background: none;
+  border: none;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: 0 4px;
+  border-radius: var(--radius-sm);
+}
+
+.paint-form-chip-remove:hover {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+.paint-palette-picker-hint {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  margin: 0 0 var(--space-3);
+}
+
+.paint-palette-picker-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--space-4);
+}
+
+.paint-palette-picker-swatch:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.paint-form-palette-btn {
+  padding: 10px 14px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.paint-form-palette-btn:hover {
+  border-color: var(--color-accent);
+  background: var(--color-bg-tertiary);
+}
+
+/* ── Palette picker modal ── */
+.paint-palette-picker {
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  width: min(520px, 92vw);
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+}
+
+.paint-palette-picker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+}
+
+.paint-palette-picker-title {
+  margin: 0;
+  font-size: var(--text-lg);
+}
+
+.paint-palette-picker-close {
+  background: none;
+  border: none;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+}
+
+.paint-palette-picker-close:hover {
+  background: var(--color-bg-secondary);
+}
+
+.paint-palette-picker-empty {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  padding: var(--space-4) 0;
+  text-align: center;
+}
+
+.paint-palette-picker-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.paint-palette-picker-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.paint-palette-picker-name {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-primary);
+}
+
+.paint-palette-picker-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.paint-palette-picker-swatch {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--color-border);
+  cursor: pointer;
+  padding: 0;
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+
+.paint-palette-picker-swatch:hover {
+  transform: scale(1.08);
+  border-color: var(--color-accent);
+}
+
+.paint-palette-picker-swatch--selected {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px var(--color-accent);
+}
+
 /* ── Delete button ── */
 .paint-form-delete-btn {
   align-self: center;

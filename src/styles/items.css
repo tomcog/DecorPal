@@ -56,6 +56,17 @@
   margin-bottom: 0;
 }
 
+.items-group--drag-over {
+  outline: 2px dashed var(--color-accent);
+  outline-offset: 4px;
+  border-radius: var(--radius-lg);
+  background: rgba(124, 111, 247, 0.06);
+}
+
+.item-card--dragging {
+  opacity: 0.4;
+}
+
 .items-group-header {
   display: flex;
   align-items: center;

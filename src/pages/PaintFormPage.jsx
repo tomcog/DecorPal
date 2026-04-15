@@ -6,6 +6,7 @@ import {
   updatePaint,
   deletePaint,
 } from '../hooks/usePaints'
+import { usePalettes } from '../hooks/usePalettes'
 import '../styles/paint-form.css'
 
 const FINISHES = ['flat', 'matte', 'eggshell', 'satin', 'semi-gloss', 'gloss']
@@ -18,6 +19,7 @@ export default function PaintFormPage() {
   const { paint, loading: paintLoading } = usePaint(isEdit ? paintId : null)
 
   const [name, setName] = useState('')
+  const [source, setSource] = useState('')
   const [brand, setBrand] = useState('')
   const [colorCode, setColorCode] = useState('')
   const [hex, setHex] = useState('#ffffff')
@@ -28,10 +30,13 @@ export default function PaintFormPage() {
   const [error, setError] = useState(null)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [showPalettePicker, setShowPalettePicker] = useState(false)
+  const { palettes, loading: palettesLoading } = usePalettes(spaceId)
 
   useEffect(() => {
     if (isEdit && paint) {
       setName(paint.name || '')
+      setSource(paint.source || '')
       setBrand(paint.brand || '')
       setColorCode(paint.color_code || '')
       setHex(paint.hex || '#ffffff')
@@ -56,7 +61,8 @@ export default function PaintFormPage() {
 
     const fields = {
       space_id: spaceId,
-      name,
+      name: name || null,
+      source: source || null,
       brand: brand || null,
       color_code: colorCode || null,
       hex: hex || null,
@@ -100,7 +106,7 @@ export default function PaintFormPage() {
 
         <div className="space-form-field">
           <label className="space-form-label" htmlFor="paint-name">
-            Color name <span className="space-form-required">*</span>
+            Color name
           </label>
           <input
             id="paint-name"
@@ -109,7 +115,20 @@ export default function PaintFormPage() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g. Swiss Coffee"
-            required
+          />
+        </div>
+
+        <div className="space-form-field">
+          <label className="space-form-label" htmlFor="paint-source">
+            Source / Store
+          </label>
+          <input
+            id="paint-source"
+            className="space-form-input"
+            type="text"
+            value={source}
+            onChange={(e) => setSource(e.target.value)}
+            placeholder="e.g. Home Depot"
           />
         </div>
 
@@ -143,7 +162,7 @@ export default function PaintFormPage() {
 
         <div className="space-form-field">
           <label className="space-form-label" htmlFor="paint-hex">
-            Color preview
+            Color
           </label>
           <div className="paint-form-color-row">
             <input
@@ -160,6 +179,13 @@ export default function PaintFormPage() {
               onChange={(e) => setHex(e.target.value)}
               placeholder="#ffffff"
             />
+            <button
+              type="button"
+              className="paint-form-palette-btn"
+              onClick={() => setShowPalettePicker(true)}
+            >
+              From palette
+            </button>
           </div>
         </div>
 
@@ -262,6 +288,68 @@ export default function PaintFormPage() {
                 {deleting ? 'Deleting...' : 'Delete'}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {showPalettePicker && (
+        <div
+          className="space-detail-overlay"
+          onClick={() => setShowPalettePicker(false)}
+        >
+          <div
+            className="paint-palette-picker"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="paint-palette-picker-header">
+              <h3 className="paint-palette-picker-title">Pick a color</h3>
+              <button
+                type="button"
+                className="paint-palette-picker-close"
+                onClick={() => setShowPalettePicker(false)}
+                aria-label="Close"
+              >
+                ×
+              </button>
+            </div>
+            {palettesLoading ? (
+              <p className="page-placeholder">Loading palettes...</p>
+            ) : palettes.length === 0 ? (
+              <p className="paint-palette-picker-empty">
+                No palettes yet in this space. Create one in the Palette section first.
+              </p>
+            ) : (
+              <div className="paint-palette-picker-list">
+                {palettes.map((palette) => (
+                  <div key={palette.id} className="paint-palette-picker-row">
+                    <span className="paint-palette-picker-name">
+                      {palette.name || 'Untitled palette'}
+                    </span>
+                    <div className="paint-palette-picker-swatches">
+                      {(palette.swatches || []).map((swatchHex, i) => (
+                        <button
+                          key={`${palette.id}-${i}`}
+                          type="button"
+                          className={`paint-palette-picker-swatch${
+                            hex.toLowerCase() === swatchHex.toLowerCase()
+                              ? ' paint-palette-picker-swatch--selected'
+                              : ''
+                          }`}
+                          style={{ backgroundColor: swatchHex }}
+                          title={swatchHex}
+                          onClick={() => {
+                            setHex(swatchHex)
+                            setShowPalettePicker(false)
+                          }}
+                        >
+                          <span className="sr-only">{swatchHex}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}

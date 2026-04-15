@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useRenders } from '../hooks/useRenders'
 import { useItems } from '../hooks/useItems'
@@ -11,8 +11,9 @@ export default function FeedTab({ spaceId }) {
   const { ideas, loading: ideasLoading } = useLightingIdeas(spaceId)
 
   const loading = rendersLoading || itemsLoading || ideasLoading
+  const storageKey = `feed-order-${spaceId}`
 
-  const feedItems = useMemo(() => {
+  const baseFeedItems = useMemo(() => {
     const entries = []
 
     for (const render of renders) {
@@ -59,6 +60,75 @@ export default function FeedTab({ spaceId }) {
     return entries
   }, [renders, items, ideas, spaceId])
 
+  const [order, setOrder] = useState(() => {
+    try {
+      const raw = localStorage.getItem(`feed-order-${spaceId}`)
+      return raw ? JSON.parse(raw) : []
+    } catch {
+      return []
+    }
+  })
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(storageKey)
+      setOrder(raw ? JSON.parse(raw) : [])
+    } catch {
+      setOrder([])
+    }
+  }, [storageKey])
+
+  const feedItems = useMemo(() => {
+    const byId = new Map(baseFeedItems.map((e) => [e.id, e]))
+    const orderSet = new Set(order)
+    const result = []
+    for (const entry of baseFeedItems) {
+      if (!orderSet.has(entry.id)) result.push(entry)
+    }
+    for (const id of order) {
+      if (byId.has(id)) result.push(byId.get(id))
+    }
+    return result
+  }, [baseFeedItems, order])
+
+  const [dragIndex, setDragIndex] = useState(null)
+  const [dragOverIndex, setDragOverIndex] = useState(null)
+
+  function handleDragStart(e, index) {
+    e.dataTransfer.effectAllowed = 'move'
+    e.dataTransfer.setData('text/plain', String(index))
+    setDragIndex(index)
+  }
+
+  function handleDragOver(e, index) {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+    if (dragOverIndex !== index) setDragOverIndex(index)
+  }
+
+  function handleDragEnd() {
+    setDragIndex(null)
+    setDragOverIndex(null)
+  }
+
+  function handleDrop(e, targetIndex) {
+    e.preventDefault()
+    const sourceIndex = Number(e.dataTransfer.getData('text/plain'))
+    setDragIndex(null)
+    setDragOverIndex(null)
+    if (Number.isNaN(sourceIndex) || sourceIndex === targetIndex) return
+    const updated = [...feedItems]
+    const [moved] = updated.splice(sourceIndex, 1)
+    updated.splice(targetIndex, 0, moved)
+    const nextOrder = updated.map((entry) => entry.id)
+    setOrder(nextOrder)
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(nextOrder))
+    } catch {
+      // ignore quota errors
+    }
+  }
+
   if (loading) {
     return <p className="page-placeholder">Loading feed...</p>
   }
@@ -90,20 +160,36 @@ export default function FeedTab({ spaceId }) {
 
   return (
     <div className="feed-grid">
-      {feedItems.map((entry) => (
-        <Link key={entry.id} to={entry.link} className="feed-card">
-          <div className="feed-card-img-wrap">
-            <img src={entry.imageUrl} alt={entry.label} className="feed-card-img" />
-            <span className="feed-card-badge">{TYPE_LABELS[entry.type]}</span>
-          </div>
-          <div className="feed-card-body">
-            <span className="feed-card-name">{entry.label}</span>
-            <span className="feed-card-date">
-              {new Date(entry.date).toLocaleDateString()}
-            </span>
-          </div>
-        </Link>
-      ))}
+      {feedItems.map((entry, index) => {
+        const classes = ['feed-card']
+        if (dragIndex === index) classes.push('feed-card--dragging')
+        if (dragOverIndex === index && dragIndex !== null && dragIndex !== index) {
+          classes.push('feed-card--drag-over')
+        }
+        return (
+          <Link
+            key={entry.id}
+            to={entry.link}
+            className={classes.join(' ')}
+            draggable
+            onDragStart={(e) => handleDragStart(e, index)}
+            onDragOver={(e) => handleDragOver(e, index)}
+            onDragEnd={handleDragEnd}
+            onDrop={(e) => handleDrop(e, index)}
+          >
+            <div className="feed-card-img-wrap">
+              <img src={entry.imageUrl} alt={entry.label} className="feed-card-img" draggable={false} />
+              <span className="feed-card-badge">{TYPE_LABELS[entry.type]}</span>
+            </div>
+            <div className="feed-card-body">
+              <span className="feed-card-name">{entry.label}</span>
+              <span className="feed-card-date">
+                {new Date(entry.date).toLocaleDateString()}
+              </span>
+            </div>
+          </Link>
+        )
+      })}
     </div>
   )
 }

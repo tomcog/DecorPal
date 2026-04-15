@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useItems } from '../hooks/useItems'
+import { useItems, updateItem } from '../hooks/useItems'
 import '../styles/items.css'
 
 const STATUS_GROUPS = [
@@ -10,23 +10,81 @@ const STATUS_GROUPS = [
 ]
 
 export default function ItemsList({ spaceId }) {
-  const { items, loading } = useItems(spaceId)
+  const { items, loading, refetch } = useItems(spaceId)
   const [collapsed, setCollapsed] = useState({})
+  const [draggingId, setDraggingId] = useState(null)
+  const [dragOverGroup, setDragOverGroup] = useState(null)
+  const [optimisticStatus, setOptimisticStatus] = useState({})
 
   if (loading) {
     return <p className="page-placeholder">Loading items...</p>
   }
 
+  const statusOf = (item) => optimisticStatus[item.id] ?? item.status
   const grouped = {
-    considering: items.filter((i) => i.status === 'considering'),
-    decided: items.filter((i) => i.status === 'decided'),
-    acquired: items.filter((i) => i.status === 'acquired'),
+    considering: items.filter((i) => statusOf(i) === 'considering'),
+    decided: items.filter((i) => statusOf(i) === 'decided'),
+    acquired: items.filter((i) => statusOf(i) === 'acquired'),
   }
 
   const hasItems = items.length > 0
 
   function toggleGroup(key) {
     setCollapsed((prev) => ({ ...prev, [key]: !prev[key] }))
+  }
+
+  function handleItemDragStart(e, item) {
+    e.dataTransfer.effectAllowed = 'move'
+    e.dataTransfer.setData('application/x-item-id', item.id)
+    e.dataTransfer.setData('text/plain', item.id)
+    setDraggingId(item.id)
+  }
+
+  function handleItemDragEnd() {
+    setDraggingId(null)
+    setDragOverGroup(null)
+  }
+
+  function handleGroupDragOver(e, groupKey) {
+    if (draggingId === null) return
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+    if (dragOverGroup !== groupKey) setDragOverGroup(groupKey)
+  }
+
+  function handleGroupDragLeave(e, groupKey) {
+    if (e.currentTarget.contains(e.relatedTarget)) return
+    if (dragOverGroup === groupKey) setDragOverGroup(null)
+  }
+
+  async function handleGroupDrop(e, groupKey) {
+    e.preventDefault()
+    const itemId = e.dataTransfer.getData('application/x-item-id') || e.dataTransfer.getData('text/plain')
+    setDraggingId(null)
+    setDragOverGroup(null)
+    if (!itemId) return
+    const item = items.find((i) => i.id === itemId)
+    if (!item) return
+    if (statusOf(item) === groupKey) return
+    setOptimisticStatus((prev) => ({ ...prev, [itemId]: groupKey }))
+    const fields = { status: groupKey }
+    if (groupKey === 'acquired') fields.acquired = true
+    else fields.acquired = false
+    const { error } = await updateItem(itemId, fields)
+    if (error) {
+      setOptimisticStatus((prev) => {
+        const next = { ...prev }
+        delete next[itemId]
+        return next
+      })
+      return
+    }
+    await refetch()
+    setOptimisticStatus((prev) => {
+      const next = { ...prev }
+      delete next[itemId]
+      return next
+    })
   }
 
   return (
@@ -51,8 +109,16 @@ export default function ItemsList({ spaceId }) {
           {STATUS_GROUPS.map(({ key, label }) => {
             const groupItems = grouped[key]
             const isCollapsed = collapsed[key]
+            const groupClasses = ['items-group']
+            if (dragOverGroup === key) groupClasses.push('items-group--drag-over')
             return (
-              <div key={key} className="items-group">
+              <div
+                key={key}
+                className={groupClasses.join(' ')}
+                onDragOver={(e) => handleGroupDragOver(e, key)}
+                onDragLeave={(e) => handleGroupDragLeave(e, key)}
+                onDrop={(e) => handleGroupDrop(e, key)}
+              >
                 <button
                   className="items-group-header"
                   onClick={() => toggleGroup(key)}
@@ -84,7 +150,10 @@ export default function ItemsList({ spaceId }) {
                         <Link
                           key={item.id}
                           to={`/spaces/${spaceId}/items/${item.id}`}
-                          className="item-card"
+                          className={`item-card${draggingId === item.id ? ' item-card--dragging' : ''}`}
+                          draggable
+                          onDragStart={(e) => handleItemDragStart(e, item)}
+                          onDragEnd={handleItemDragEnd}
                         >
                           <div className="item-card-photo">
                             {item.photo_urls && item.photo_urls.length > 0 ? (
@@ -92,6 +161,7 @@ export default function ItemsList({ spaceId }) {
                                 src={item.photo_urls[0]}
                                 alt={item.name}
                                 className="item-card-img"
+                                draggable={false}
                               />
                             ) : (
                               <div className="item-card-placeholder">

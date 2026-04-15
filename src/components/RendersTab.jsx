@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useRenders } from '../hooks/useRenders'
 import { uploadRenderImage, saveRender, fileToDataUrl } from '../hooks/useStudio'
@@ -10,6 +10,33 @@ export default function RendersTab({ spaceId }) {
   const [uploading, setUploading] = useState(false)
   const [dragOver, setDragOver] = useState(false)
   const dragCounter = useRef(0)
+  const storageKey = `renders-order-${spaceId}`
+
+  const [order, setOrder] = useState([])
+  const [dragIndex, setDragIndex] = useState(null)
+  const [dragOverIndex, setDragOverIndex] = useState(null)
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(storageKey)
+      setOrder(raw ? JSON.parse(raw) : [])
+    } catch {
+      setOrder([])
+    }
+  }, [storageKey])
+
+  const orderedRenders = useMemo(() => {
+    const byId = new Map(renders.map((r) => [r.id, r]))
+    const orderSet = new Set(order)
+    const result = []
+    for (const render of renders) {
+      if (!orderSet.has(render.id)) result.push(render)
+    }
+    for (const id of order) {
+      if (byId.has(id)) result.push(byId.get(id))
+    }
+    return result
+  }, [renders, order])
 
   const uploadFiles = useCallback(async (files) => {
     if (files.length === 0) return
@@ -69,6 +96,47 @@ export default function RendersTab({ spaceId }) {
     const files = Array.from(e.dataTransfer.files || [])
     if (files.length > 0) {
       uploadFiles(files)
+    }
+  }
+
+  function handleCardDragStart(e, index) {
+    e.dataTransfer.effectAllowed = 'move'
+    e.dataTransfer.setData('application/x-render-index', String(index))
+    e.dataTransfer.setData('text/plain', String(index))
+    setDragIndex(index)
+  }
+
+  function handleCardDragOver(e, index) {
+    if (e.dataTransfer.types.includes('Files')) return
+    e.preventDefault()
+    e.stopPropagation()
+    e.dataTransfer.dropEffect = 'move'
+    if (dragOverIndex !== index) setDragOverIndex(index)
+  }
+
+  function handleCardDragEnd() {
+    setDragIndex(null)
+    setDragOverIndex(null)
+  }
+
+  function handleCardDrop(e, targetIndex) {
+    if (e.dataTransfer.types.includes('Files')) return
+    e.preventDefault()
+    e.stopPropagation()
+    const raw = e.dataTransfer.getData('application/x-render-index') || e.dataTransfer.getData('text/plain')
+    const sourceIndex = Number(raw)
+    setDragIndex(null)
+    setDragOverIndex(null)
+    if (Number.isNaN(sourceIndex) || sourceIndex === targetIndex) return
+    const updated = [...orderedRenders]
+    const [moved] = updated.splice(sourceIndex, 1)
+    updated.splice(targetIndex, 0, moved)
+    const nextOrder = updated.map((r) => r.id)
+    setOrder(nextOrder)
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(nextOrder))
+    } catch {
+      // ignore quota errors
     }
   }
 
@@ -166,40 +234,53 @@ export default function RendersTab({ spaceId }) {
         />
       </div>
       <div className="renders-grid">
-        {renders.map((render) => (
-          <Link
-            key={render.id}
-            to={`/spaces/${spaceId}/renders/${render.id}`}
-            className="render-card"
-          >
-            <div className="render-card-img-wrap">
-              {render.image_url ? (
-                <img
-                  src={render.image_url}
-                  alt={render.name}
-                  className="render-card-img"
-                />
-              ) : (
-                <div className="render-card-placeholder">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                    <circle cx="8.5" cy="8.5" r="1.5" />
-                    <polyline points="21 15 16 10 5 21" />
-                  </svg>
-                </div>
-              )}
-              {render.prompt_text && (
-                <span className="render-card-badge">AI</span>
-              )}
-            </div>
-            <div className="render-card-body">
-              <span className="render-card-name">{render.name || 'Untitled'}</span>
-              <span className="render-card-date">
-                {new Date(render.created_at).toLocaleDateString()}
-              </span>
-            </div>
-          </Link>
-        ))}
+        {orderedRenders.map((render, index) => {
+          const classes = ['render-card']
+          if (dragIndex === index) classes.push('render-card--dragging')
+          if (dragOverIndex === index && dragIndex !== null && dragIndex !== index) {
+            classes.push('render-card--drag-over')
+          }
+          return (
+            <Link
+              key={render.id}
+              to={`/spaces/${spaceId}/renders/${render.id}`}
+              className={classes.join(' ')}
+              draggable
+              onDragStart={(e) => handleCardDragStart(e, index)}
+              onDragOver={(e) => handleCardDragOver(e, index)}
+              onDragEnd={handleCardDragEnd}
+              onDrop={(e) => handleCardDrop(e, index)}
+            >
+              <div className="render-card-img-wrap">
+                {render.image_url ? (
+                  <img
+                    src={render.image_url}
+                    alt={render.name}
+                    className="render-card-img"
+                    draggable={false}
+                  />
+                ) : (
+                  <div className="render-card-placeholder">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                      <circle cx="8.5" cy="8.5" r="1.5" />
+                      <polyline points="21 15 16 10 5 21" />
+                    </svg>
+                  </div>
+                )}
+                {render.prompt_text && (
+                  <span className="render-card-badge">AI</span>
+                )}
+              </div>
+              <div className="render-card-body">
+                <span className="render-card-name">{render.name || 'Untitled'}</span>
+                <span className="render-card-date">
+                  {new Date(render.created_at).toLocaleDateString()}
+                </span>
+              </div>
+            </Link>
+          )
+        })}
       </div>
     </div>
   )

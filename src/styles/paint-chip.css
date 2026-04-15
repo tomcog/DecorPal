@@ -1,0 +1,111 @@
+.paint-chip-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.paint-chip-link:hover {
+  text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.paint-chip {
+  border-radius: var(--radius-lg);
+  padding: var(--space-5) var(--space-5) var(--space-4);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-height: 150px;
+}
+
+.paint-chip--dark {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.paint-chip--light {
+  color: rgba(20, 20, 20, 0.9);
+}
+
+.paint-chip-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.paint-chip-name {
+  font-size: 26px;
+  font-weight: var(--font-bold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.1;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.paint-chip-code {
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.75;
+  white-space: nowrap;
+}
+
+.paint-chip-table {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid currentColor;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.paint-chip--dark .paint-chip-table {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.paint-chip--light .paint-chip-table {
+  border-color: rgba(0, 0, 0, 0.3);
+}
+
+.paint-chip-cell {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 10px;
+  gap: 2px;
+  min-width: 0;
+}
+
+.paint-chip-cell + .paint-chip-cell {
+  border-left: 1px solid;
+}
+
+.paint-chip--dark .paint-chip-cell + .paint-chip-cell {
+  border-left-color: rgba(255, 255, 255, 0.5);
+}
+
+.paint-chip--light .paint-chip-cell + .paint-chip-cell {
+  border-left-color: rgba(0, 0, 0, 0.3);
+}
+
+.paint-chip-cell-label {
+  font-size: 10px;
+  font-weight: var(--font-semibold);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.paint-chip-cell-value {
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
