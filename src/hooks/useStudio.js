@@ -96,7 +96,14 @@ export async function generateVisualization({ promptText, attachments, photoData
     if (!response.ok) {
       const errBody = await response.text()
       console.error('Gemini API error:', response.status, errBody)
-      return { imageUrl: null, error: { message: 'Image generation failed. Please try again.' } }
+      let detail = errBody
+      try {
+        const parsed = JSON.parse(errBody)
+        detail = parsed?.error?.message || errBody
+      } catch {
+        // leave detail as raw text
+      }
+      return { imageUrl: null, error: { message: `Gemini error ${response.status}: ${detail}` } }
     }
 
     const result = await response.json()
