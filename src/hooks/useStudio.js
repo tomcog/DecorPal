@@ -73,6 +73,9 @@ export async function generateVisualization({ promptText, attachments, photoData
     const [header, base64] = dataUrl.split(',')
     const mimeType = header.match(/data:(.*?);/)?.[1] || 'image/jpeg'
     parts.push({
+      text: 'Style reference photo — use the mood, materials, textures, colours, and overall aesthetic of this existing space as the visual foundation for the generated image:',
+    })
+    parts.push({
       inline_data: {
         mime_type: mimeType,
         data: base64,
